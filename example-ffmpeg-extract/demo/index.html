@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input id="js_file" type="file">
+  <button id="audio_js_button">提取音频</button>
+  <br>
+  <input id="js_time" type="number" value="1" placeholder="画面时间s">
+  <button id="frame_js_button">提取画面</button>
+  <div id="js_info"></div>
+  <div id="js_result"></div>
+  <script src="./index.js"></script>
+  <script>
+    let button = document.querySelector('#audio_js_button');
+    let resultContainer = document.querySelector('#js_result');
+    let fileInput = document.querySelector('#js_file');
+    
+    let infoContainer = document.querySelector('#js_info');
+    const frame_js_button = document.querySelector('#frame_js_button');
+    button.addEventListener('click', () => {
+      let file = fileInput.files[0];
+      let startTime = Date.now();
+      window.webExtract.extractAudio(file, (data) => {
+        //console.log('data===>', data);
+        const { audioBuffer } = data;
+        const blob = new Blob([audioBuffer], { type: 'audio/aac' });
+        const blobURL = URL.createObjectURL(blob);
+        const audio = document.createElement('audio');
+        audio.src = blobURL;
+        audio.style.width = '720px';
+        audio.style.height = '40px';
+        audio.style.display="block";
+        audio.controls="controls";
+        document.body.appendChild(audio);
+      })
+    });
+    frame_js_button.addEventListener('click', () => {
+      let file = fileInput.files[0];
+      let startTime = Date.now();
+      window.webExtract.extractImageList(file, 0, { height: 66, wrapperWidth: 720 }, (data) => {
+		    console.log(data);
+        let timeInput = document.querySelector('#js_time').value;
+        console.log(data[timeInput]);
+        const { width, height, duration, imageDataBuffer } = data[timeInput];
+        console.log('width:'+width);
+
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+
+        canvas.width = width;
+        canvas.height = height;
+        console.log("canvas.height:"+height);
+		    console.log(imageDataBuffer);
+        const imageData = new ImageData(imageDataBuffer, width, height);
+        ctx.putImageData(imageData, 0, 0, 0, 0, width, height);
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL('image/jpeg');
+        img.style.marginLeft = '10px';
+        img.style.width = '300px';
+        resultContainer.appendChild(img);
+      })
+    });
+
+  </script>
+</body>
+
+</html>
