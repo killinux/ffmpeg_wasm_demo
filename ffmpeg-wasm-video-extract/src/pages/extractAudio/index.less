@@ -1,0 +1,37 @@
+.aBlock {
+  margin-left: 10px;
+  display: inline-block;
+}
+.aNone {
+  margin-top: 10px;
+  display: none;
+}
+.resWrapper {
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+  height: 380px;
+  border: 1px dashed #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
+  .audioWrapper,
+  .textWrapper {
+    display: flex;
+    align-items: center;
+  }
+  .textWrapper {
+    margin-top: 10px;
+    .label {
+      white-space: nowrap;
+    }
+    .text {
+      color: #5c5c5c;
+      word-break: break-all;
+    }
+  }
+}
+.audioControls {
+  width: 720px;
+  height: 40px;
+  display: inline-block;
+}
